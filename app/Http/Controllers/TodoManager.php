@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\Todo;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+class TodoManager extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $role = Auth::user()->role;
+
+         if ($role === 'admin')
+         {
+             $todos = Todo::all();
+             return view('admin.viewtodo', compact('todos'));
+         }
+         else
+         {
+             $user = Auth::user();
+             $todos = $user->todos;
+             return view('user.viewtodo', compact('todos'));
+         }
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'message' => 'required|string',
+    ]);
+        Todo::create([
+        'title' => $validated['title'],
+        'message' => $validated['message'],
+        'user_id' => Auth::id(),
+    ]);
+    $role = Auth::user()->role;
+    if ($role === 'admin')
+    {
+        return redirect(route(name:"adminaddtodo"));
+    }
+    else
+    {
+        return redirect(route(name:"useraddtodo"));
+    }
+
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}
