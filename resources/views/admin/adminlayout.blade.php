@@ -8,6 +8,7 @@
     <a href="{{route("viewuser")}}"><button class="btn btn-outline-success me-2" type="button">View User</button></a>
     <a href="{{route("register")}}"><button class="btn btn-outline-success me-2" type="button">Add User</button></a>
     <a href="{{route("logout")}}"><button class="btn btn-sm btn-outline-danger" type="button">Logout</button></a>
+</form>
   </div>
 </nav>
 

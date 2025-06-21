@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\Todo;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class TodoManager extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $role = Auth::user()->role;

@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Response;
 
 class AuthManager extends Controller
 {
+
     function login()
     {
         return view(view: 'auth.login');
@@ -65,7 +67,7 @@ class AuthManager extends Controller
     }
     function logout(Request $request)
     {
-            $user = Auth::user();
+           // $user = Auth::user();
 
          Auth::logout(); // Log the user out
 
