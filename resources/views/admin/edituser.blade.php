@@ -27,7 +27,8 @@
             <label class="form-check-label" for="checkDefault">Remember me</label>
         </div>
         <button class="btn btn-primary w-100 py-2" type="submit">Edit</button>
-
     </form>
+
 </main>
+<script src="../js/admin/edituser.js"></script>
 @endsection

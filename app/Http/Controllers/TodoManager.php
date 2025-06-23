@@ -10,10 +10,16 @@ class TodoManager extends Controller
 
     public function index()
     {
+        if (!Auth::check())
+        {
+        return redirect()->route('login');
+
+        }
         $role = Auth::user()->role;
 
          if ($role === 'admin')
          {
+
              $todos = Todo::all();
              return view('admin.viewtodo', compact('todos'));
          }

@@ -7,5 +7,6 @@
     <a href="{{route("logout")}}"><button class="btn btn-sm btn-outline-danger" type="button">Logout</button></a>
   </div>
 </nav>
+<script src="../js/user/userlayout"></script>
 @yield("userbody")
 @endsection

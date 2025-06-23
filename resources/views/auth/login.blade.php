@@ -55,4 +55,5 @@ body {
 
     </form>
 </main>
+<script src="../js/auth/login.js"></script>
 @endsection

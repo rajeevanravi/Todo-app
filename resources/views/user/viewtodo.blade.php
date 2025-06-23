@@ -3,6 +3,7 @@
 <div class="container mt-5">
     <h2 class="mb-4">View To-Do</h2>
     <div>
+        @if(isset($todos) && $todos->count() > 0)
         @foreach($todos as $todo)
             <div class="card mb-3">
                 <div class="card-body">
@@ -18,6 +19,10 @@
                 </div>
             </div>
         @endforeach
+        @else
+            <p>No To-Do found.</p>
+        @endif
     </div>
 </div>
+<script src="../js/user/viewtodo"></script>
 @endsection

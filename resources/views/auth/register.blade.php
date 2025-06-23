@@ -70,4 +70,5 @@ body {
     </form><br>
     <a href="{{route("viewuser")}}"><button class="btn btn-outline-danger w-100 " >Cancel</button></a>
 </main>
+<script src="../js/auth/register.js"></script>
 @endsection

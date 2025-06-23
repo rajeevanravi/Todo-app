@@ -11,6 +11,6 @@
 </form>
   </div>
 </nav>
-
+<script src="../js/admin/adminlayout/js"></script>
 @yield("adminbody");
 @endsection

@@ -37,9 +37,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/todos', [TodoManager::class, 'store'])->name('todo.store');
 
-    Route::get('/viewtodo', [TodoManager::class, 'index'])->name(name:"adminviewtodo");
+    Route::get('/viewtodo-admin', [TodoManager::class, 'index'])->name(name:"adminviewtodo");
 
-    Route::get('/viewtodo', [TodoManager::class, 'index'])->name(name:"userviewtodo");
+    Route::get('/viewtodo-user', [TodoManager::class, 'index'])->name(name:"userviewtodo");
 
     Route::get('viewuser', [UserManager::class, 'index'])->name(name:"viewuser");
 
@@ -68,16 +68,6 @@ Route::middleware('auth')->group(function () {
     Route::get('useraddtodo', function () {
         return view('user.posttodo');
     })->name(name:"useraddtodo");;
-
-    Route::get('adminviewtodo', function () {
-        $todos = Todo::all();
-        return view('admin.viewtodo');
-    })->name(name:"adminviewtodo");;
-
-    Route::get('userviewtodo', function () {
-        return view('user.viewtodo');
-    })->name(name:"userviewtodo");;
-
 
 
 });

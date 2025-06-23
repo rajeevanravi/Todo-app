@@ -34,4 +34,5 @@
   </tbody>
 </table>
 </div>
+<script src="../js/admin/viewuser.js"></script>
 @endsection

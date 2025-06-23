@@ -17,5 +17,6 @@
 
         <button type="submit" class="btn btn-primary">Add To-Do</button>
     </form>
+    <script src="../js/user/posttodo.js"></script>
 </div>
 @endsection
