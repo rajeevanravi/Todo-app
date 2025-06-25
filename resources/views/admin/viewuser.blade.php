@@ -44,43 +44,41 @@
 
 @section('subscripts')
     <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $(document).ready(function () {
+        $('.delete-btn').click(function (e) {
+            e.preventDefault();
+            let userId = $(this).data("id");
+            let url = `/users/${userId}`; // Constructing route dynamically
+
+                $.ajax({
+                    url: url,
+                    type: "DELETE",
+                    dataType: "json",
+                    success: function (response) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Deleted!",
+                            text: response.message || "User deleted successfully.",
+                        });
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                        });
+                    }
+                });
+
         });
-        $(document).ready(function () {
-            $('.delete-btn').click(function (e) {
-                e.preventDefault();
-
-                let userId = $(this).data("id"); // Get user ID
-                let url = "{{ route('users.destroy', $item->id) }}";
-                console.log(userId); console.log(url);
-                if (confirm("Are you sure you want to delete this user?")) {
-
-                    $.ajax({
-                        url: url,
-                        type: "DELETE",
-                        dataType: "json",
-                        success: function () {
-                            alert("User deleted successfully!");
-                            location.reload(); // Reloads the current page
-
-                        },
-                        error: function(xhr, status, error) {
-                            alert("Error deleting user: " + error);
-                            console.log(xhr.responseText);
-                        }
-            });
-                }
-
-
-
-
-
-
-            });
-        });
-    </script>
+    });
+</script>
 
 @endsection

@@ -25,10 +25,16 @@
                 success: function (response) {
 
                     if (response.success) {
-                        alert(response.message);
+                       // alert(response.message);
+                       Swal.fire(response.message);
                         window.location.href = response.redirect;
                     } else {
-                        alert(response.message);
+                        //alert(response.message);
+                        Swal.fire({
+                          icon: "error",
+                          title: "Oops...",
+                          text: response.message,
+                        });
                     }
 
                 }

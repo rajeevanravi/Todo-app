@@ -75,7 +75,92 @@ body {
 @section('scripts')
     <script>
         $(document).ready(function () {
-            $('#signup').click(function (e) {
+            $.validator.addMethod("validRole", function (value, element) {
+               return value === "admin" || value === "user"; // Only allow "admin" or "user"
+            }, "Role must be either admin or user");
+
+            $('#register_form').validate({
+                rules:{
+                    name:{
+                        required: true,
+                        minlength: 3
+                    },
+                    email:{
+                        required: true,
+                        email: true,
+                    },
+                    role:{
+                        required: true,
+                        validRole: true,
+                    },
+                    password:{
+                        required: true,
+                        minlength: 6
+                    },
+                },
+                message:{
+                    name:{
+                        required: "Please enter your name",
+                        minlength: "Name must be at least 3 characters",
+                    },
+                    email:{
+                        required: "Please enter your email address",
+                        minlength: "Enter a valid email address",
+                    },
+                    role:{
+                        required: "Please enter your role",
+                        minlength: "Role must be either Admin or User",
+                    },
+                    password:{
+                        required: "Please enter your password",
+                        minlength: "Password must be at least 6 characters",
+                    },
+                },
+
+                submitHandler: function (form) {
+                    let register_formData = {
+                        name: $('#name').val(),
+                        email: $('#email').val(),
+                        password: $('#password').val(),
+                        role: $('#role').val(),
+                        _token: $('input[name="_token"]').val()
+                    };
+                    $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "{{route('register.post')}}",
+                    data: register_formData,
+                    success: function (response) {
+                        if (response.success) {
+                        //alert(response.message);
+                        Swal.fire({
+                            title: "Drag me!",
+                            icon: response.message,
+                            draggable: true
+                        });
+                        window.location.href = response.redirect;
+                        } else {
+                        //alert(response.message);
+                        Swal.fire({
+                          icon: "error",
+                          title: "Oops...",
+                          text: response.message,
+                        });
+                        }
+                    },
+
+                    error: function () {
+                        //alert('Something went wrong.');
+                        Swal.fire({
+                            title: "The Internet?",
+                            text: "Something went wrong.",
+                            icon: "question"
+                        })
+                    }
+                });
+                }
+            })//
+            /* $('#signup').click(function (e) {
                 e.preventDefault();
 
                 let register_formData = {
@@ -107,7 +192,7 @@ body {
                 });
 
 
-            });
+            }); */
         });
     </script>
 @endsection

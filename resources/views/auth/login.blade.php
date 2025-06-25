@@ -60,7 +60,76 @@ body {
 @section('scripts')
     <script>
         $(document).ready(function () {
-        $('#signin').click(function (e) {
+
+            $('#login_form').validate({
+
+                rules:{
+                    name:{
+                        required: true,
+                        minlength: 3
+                    },
+                    password:{
+                        required: true,
+                        minlength: 6
+                    },
+                },
+                message:{
+                    name:{
+                        required: "Please enter your name",
+                        minlength: "Name must be at least 3 characters",
+                    },
+                    password:{
+                        required: "Please enter your password",
+                        minlength: "Password must be at least 6 characters",
+                    },
+                },
+                submitHandler: function (form) {
+                    let login_formData = {
+                        email: $('#email').val(),
+                        password: $('#password').val(),
+                        _token: $('input[name="_token"]').val()
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('login.post') }}",
+                        data: login_formData,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                       // alert(response.message);
+                                Swal.fire({
+                                    position: "top-end",
+                                    icon: "success",
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            window.location.href = response.redirect;
+                            } else {
+                            //alert('Try again');
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: response.message,
+                            });
+                     }
+                },
+
+                        error: function () {
+                            //alert('Something went wrong.');
+                            Swal.fire({
+                                title: "The Internet?",
+                                text: "Something went wrong.",
+                                icon: "question"
+                            });
+                        }
+            });
+                }
+// folowing codes for not using jquery validater ..........
+       /* })
+
+             $('#signin').click(function (e) {
             e.preventDefault();
 
             let login_formData = {
@@ -88,7 +157,7 @@ body {
                     alert('Something went wrong.');
                 }
             });
-
+*/
 
         });
     });

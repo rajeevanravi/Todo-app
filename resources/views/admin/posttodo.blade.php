@@ -34,7 +34,6 @@
                     message: $('#message').val(),
                     _token: $('input[name="_token"]').val()
                 };
- //               console.log(addtodo_formData);
                 $.ajax({
                     type: "POST",
                     url: "{{ route('todo.store') }}",
@@ -42,10 +41,20 @@
                     dataType: "json",
                     success: function (response) {
                         if (response.success) {
-                        alert(response.message);
+                        //alert(response.message);
+                        Swal.fire({
+                            title: "Drag me!",
+                            icon: response.message,
+                            draggable: true
+                        });
                         window.location.href = response.redirect;
                         } else {
-                        alert(response.message);
+                        //alert(response.message);
+                        Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: response.message,
+                            });
                         }
                     }
 

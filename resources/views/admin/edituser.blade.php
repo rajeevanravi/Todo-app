@@ -36,9 +36,50 @@
 @section('subscripts')
     <script>
         $(document).ready(function () {
-            $('#submit').click(function (e) {
-                e.preventDefault();
-  //              alert('bbb')
+            $.validator.addMethod("validRole", function (value, element) {
+                return value === "admin" || value === "user"; // Only allow "admin" or "user"
+            }, "Role must be either admin or user");
+
+            $('#edituserform').validate({
+
+                rules:{
+                    name:{
+                        required: true,
+                        minlength: 3
+                    },
+                    email:{
+                        required: true,
+                        email: true,
+                    },
+                    role:{
+                        required: true,
+                        validRole: true,
+                    },
+                    password:{
+                        required: true,
+                        minlength: 6
+                    },
+                },
+                message:{
+                    name:{
+                        required: "Please enter your name",
+                        minlength: "Name must be at least 3 characters",
+                    },
+                    email:{
+                        required: "Please enter your email address",
+                        minlength: "Enter a valid email address",
+                    },
+                    role:{
+                        required: "Please enter your role",
+                        minlength: "Role must be either Admin or User",
+                    },
+                    password:{
+                        required: "Please enter your password",
+                        minlength: "Password must be at least 6 characters",
+                    },
+                },
+            submitHandler: function (form) {
+
                 let edituser_formData = {
                     name: $('#name').val(),
                     email: $('#email').val(),
@@ -46,7 +87,51 @@
                     role: $('#role').val(),
                     _token: $('input[name="_token"]').val()
                 };
-//console.log(edituser_formData);
+
+                $.ajax({
+                    type: "PUT",
+                    dataType: "json",
+                    url: "{{ route('users.update', $user->id) }}",
+                    data: edituser_formData,
+                    success: function (response) {
+                        if (response.success) {
+                        //alert(response.message);
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        window.location.href = response.redirect;
+                        } else {
+                        //alert(response.message);
+                        Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: response.message,
+                            });
+                        }
+                    },
+
+                    error: function () {
+                        alert('Something went wrong.');
+                    }
+                });
+            }
+            })
+
+            /* $('#submit').click(function (e) {//
+                e.preventDefault();
+
+                let edituser_formData = {
+                    name: $('#name').val(),
+                    email: $('#email').val(),
+                    password: $('#password').val(),
+                    role: $('#role').val(),
+                    _token: $('input[name="_token"]').val()
+                };
+
 
                 $.ajax({
                     type: "PUT",
@@ -68,7 +153,7 @@
                 });
 
 
-            });
+            });// */
         });
     </script>
 @endsection
