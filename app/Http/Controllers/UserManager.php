@@ -73,7 +73,13 @@ class UserManager extends Controller
         }
 
         $user->update($validated);
-        return redirect(route(name:"viewuser"));
+      //  return redirect(route(name:"viewuser"));
+        return response()->json([
+            'success' => true,
+            'message' => 'Edit user successfully',
+            'redirect' => route('viewuser'),
+        ]);
+
 }
 
     /**
@@ -81,7 +87,15 @@ class UserManager extends Controller
      */
     public function destroy(string $id)
     {
-        User::destroy($id);
-        return redirect(route(name:"viewuser"));
+        /* User::destroy($id);
+        return redirect(route(name:"viewuser")); */
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully',
+            'redirect' => route('viewuser'),
+        ]);
     }
 }

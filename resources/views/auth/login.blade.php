@@ -30,18 +30,18 @@ body {
 @endsection
 @section("content")
 <main class="form-signin w-100 m-auto">
-    <form method="post" action="{{route("login.post")}}">
+    <form id="login_form">
         @csrf
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
         <div class="form-floating">
-            <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
             <label for="floatingInput">Email address</label>
             @error('email')
                 <span class="text-danger">{{$message}}</span>
             @enderror
         </div>
         <div class="form-floating">
-            <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input name="password" type="password" class="form-control" id="password" placeholder="Password">
             <label for="floatingPassword">Password</label>
             @error('password')
                 <span class="text-danger">{{$message}}</span>
@@ -51,9 +51,49 @@ body {
             <input class="form-check-input" type="checkbox" value="remember-me" id="checkDefault">
             <label class="form-check-label" for="checkDefault">Remember me</label>
         </div>
-        <button class="btn btn-outline-primary w-100 py-2" type="submit">Sign in</button>
+        <button class="btn btn-outline-primary w-100 py-2" type="submit" id="signin">Sign in</button>
 
     </form>
 </main>
-<script src="../js/auth/login.js"></script>
+
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+        $('#signin').click(function (e) {
+            e.preventDefault();
+
+            let login_formData = {
+                email: $('#email').val(),
+                password: $('#password').val(),
+                _token: $('input[name="_token"]').val()
+            };
+
+
+             $.ajax({
+                type: "POST",
+                url: "{{ route('login.post') }}",
+                data: login_formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        window.location.href = response.redirect;
+                    } else {
+                        alert('Try again');
+                    }
+                },
+
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+
+
+        });
+    });
+
+    </script>
+
+
 @endsection

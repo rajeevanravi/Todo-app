@@ -4,9 +4,35 @@
   <div class="">
     <a href="{{route("useraddtodo")}}"><button class="btn btn-outline-success me-2" type="button">Add Todo</button></a>
     <a href="{{route("userviewtodo")}}"><button class="btn btn-outline-success me-2" type="button">View Todo</button></a>
-    <a href="{{route("logout")}}"><button class="btn btn-sm btn-outline-danger" type="button">Logout</button></a>
+    <button id="logout" class="btn btn-sm btn-outline-danger" type="button">Logout</button>
   </div>
 </nav>
-<script src="../js/user/userlayout"></script>
 @yield("userbody")
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $('#logout').click(function (e) {
+                e.preventDefault();
+
+             $.ajax({
+                type: "GET",
+                url: "{{ route('logout') }}",
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.success) {
+                        alert(response.message);
+                        window.location.href = response.redirect;
+                    } else {
+                        alert(response.message);
+                    }
+
+                }
+             });
+
+            });
+        });
+    </script>
+    @yield('subscripts')
 @endsection

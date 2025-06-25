@@ -24,5 +24,5 @@
         @endif
     </div>
 </div>
-<script src="../js/user/viewtodo"></script>
+
 @endsection

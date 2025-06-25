@@ -3,7 +3,7 @@
 <div class="container mt-5">
     <h2 class="mb-4">Create a New To-Do</h2>
 
-    <form action="{{ route('todo.store') }}" method="POST">
+    <form id="todo-form">
         @csrf
         <div class="mb-3">
             <label for="title" class="form-label">To-Do Title</label>
@@ -15,9 +15,47 @@
             <textarea name="message" id="message" class="form-control" rows="4" placeholder="Write your task details..." required></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary">Add To-Do</button>
+        <button type="submit" id="submit" class="btn btn-primary">Add To-Do</button>
     </form>
 
 </div>
-<script src="../js/admin/posttodo.js"></script>
+
+
+@endsection
+
+@section('subscripts')
+    <script>
+        $(document).ready(function () {
+            $('#submit').click(function (e) {
+                e.preventDefault();
+                alert('nn')
+                let addtodo_formData = {
+                    title: $('#title').val(),
+                    message: $('#message').val(),
+                    _token: $('input[name="_token"]').val()
+                };
+ //               console.log(addtodo_formData);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('todo.store') }}",
+                    data: addtodo_formData,
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                        alert(response.message);
+                        window.location.href = response.redirect;
+                        } else {
+                        alert(response.message);
+                        }
+                    }
+
+
+
+                });
+
+            });
+        });
+
+    </script>
+
 @endsection

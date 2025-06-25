@@ -18,7 +18,10 @@ class AuthManager extends Controller
 
     function loginpost(Request $request)
     {
-        $request->validate([
+        // using this for pure laravel login and defind the post and method in form in blade file......
+
+
+        /* $request->validate([
             'email' => 'required',
             'password' => 'required',
         ]);
@@ -38,7 +41,30 @@ class AuthManager extends Controller
 
            // return redirect()->intended(route(name:"home"));
         }
-        return redirect(route(name:"login"))->with("error","try again");
+        return redirect(route(name:"login"))->with("error","try again"); */
+
+        // for Ajex login logic
+        $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+
+        $redirectUrl = $user->role === 'admin'
+            ? route('adminviewtodo')
+            : route('userviewtodo');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login successfully.',
+            'redirect' => $redirectUrl,
+        ]);
+    }
+
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Invalid email or password.',
+    ]);
     }
 
     function register()
@@ -48,7 +74,8 @@ class AuthManager extends Controller
 
     function registerpost(Request $request)
     {
-        $request->validate([
+        // this for pure laravel login if useing this then enable method and action in register form
+        /* $request->validate([
             'name' =>'required',
             'email' =>'required|email',
             'password' =>'required|min:6',
@@ -63,7 +90,35 @@ class AuthManager extends Controller
         {
             return redirect(route(name:"viewuser"));
         }
-        return redirect(route(name:"register"));
+        return redirect(route(name:"register"));*/
+
+        $request->validate([
+            'name' =>'required',
+            'email' =>'required|email',
+            'password' =>'required|min:6',
+            'role' =>'required',
+        ]);
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->role = $request->role;
+
+        if($user->save())
+        {
+           return response()->json([
+            'success' => true,
+            'message' => 'Add user successfully.',
+            'redirect' => route('viewuser'),
+        ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'try again.',
+
+        ]);
+
+
     }
     function logout(Request $request)
     {
@@ -75,6 +130,12 @@ class AuthManager extends Controller
         $request->session()->invalidate(); // Invalidate session
         $request->session()->regenerateToken(); // Prevent CSRF reuse
 
-        return redirect(route(name:"login")); // Redirect to login page
+       // return redirect(route(name:"login")); // Redirect to login page
+       return response()->json([
+        'success' => true,
+        'message' => 'Logged out successfully',
+        'redirect' => route('login'),
+    ]);
+
     }
 }

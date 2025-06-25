@@ -57,11 +57,21 @@ class TodoManager extends Controller
     $role = Auth::user()->role;
     if ($role === 'admin')
     {
-        return redirect(route(name:"adminaddtodo"));
+//return redirect(route(name:"adminaddtodo"));
+        return response()->json([
+            'success' => true,
+            'message' => 'Add todo successfully.',
+            'redirect' => route('adminaddtodo'),
+        ]);
     }
     else
     {
-        return redirect(route(name:"useraddtodo"));
+      //  return redirect(route(name:"useraddtodo"));
+      return response()->json([
+            'success' => true,
+            'message' => 'Add todo successfully.',
+            'redirect' => route('useraddtodo'),
+        ]);
     }
 
     }

@@ -25,5 +25,5 @@
     </div>
 
 </div>
-<script src='../js/admin/viewtodo.js'></script>
+
 @endsection
