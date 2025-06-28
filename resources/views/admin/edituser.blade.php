@@ -1,4 +1,33 @@
 @extends("admin.adminlayout")
+@section("style")
+<style>
+    html,
+body {
+  height: 100%;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 1rem;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+</style>
+@endsection
 @section("adminbody")
 <main class="form-signin w-100 m-auto">
     <form id="edituserform">
@@ -8,19 +37,19 @@
         <h1 class="h3 mb-3 fw-normal">Edit user Profile</h1>
         <div class="form-floating">
             <input name="name" type="text" class="form-control" id="name" >
-            <label for="floatingInput">Name({{$user->name}})</label>
+            <label id="namelabel" for="floatingInput">Name({{$user->name}})</label>
         </div>
         <div class="form-floating">
             <input name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
-            <label for="floatingInput">Email address({{$user->email}})</label>
+            <label id="emaillabel" for="floatingInput">Email address({{$user->email}})</label>
         </div>
         <div class="form-floating">
             <input name="role" type="text" class="form-control" id="role" placeholder="name@example.com">
-            <label for="floatingInput">Role({{$user->role}})</label>
+            <label id="rolelabel" for="floatingInput">Role({{$user->role}})</label>
         </div>
         <div class="form-floating">
             <input name="password" type="password" class="form-control" id="password" placeholder="Password">
-            <label for="floatingPassword">Password</label>
+            <label id="passwordlabel" for="floatingPassword">Password</label>
         </div>
         <div class="form-check text-start my-3">
             <input class="form-check-input" type="checkbox" value="remember-me" id="checkDefault">
@@ -39,6 +68,38 @@
             $.validator.addMethod("validRole", function (value, element) {
                 return value === "admin" || value === "user"; // Only allow "admin" or "user"
             }, "Role must be either admin or user");
+
+            $('#email').click(function() {
+                //$('#emaillabel').hide();
+                $("#emaillabel").animate({
+                    left: "300px",
+                    // top: "200px"
+                }, 1000);
+            });
+
+            $('#password').click(function() {
+                //$('#passwordlabel').hide();
+                $("#passwordlabel").animate({
+                    left: "300px",
+                    // top: "200px"
+                }, 1000);
+            });
+
+            $('#role').click(function() {
+                //$('#rolelabel').hide();
+                $("#rolelabel").animate({
+                    left: "300px",
+                    // top: "200px"
+                }, 1000);
+            });
+
+            $('#name').click(function() {
+                //$('#namelabel').hide();
+                $("#namelabel").animate({
+                    left: "300px",
+                    // top: "200px"
+                }, 1000);
+            });
 
             $('#edituserform').validate({
 

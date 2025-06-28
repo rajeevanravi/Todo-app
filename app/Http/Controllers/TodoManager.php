@@ -61,7 +61,7 @@ class TodoManager extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Add todo successfully.',
-            'redirect' => route('adminaddtodo'),
+            'redirect' => route('adminviewtodo'),
         ]);
     }
     else
@@ -70,7 +70,7 @@ class TodoManager extends Controller
       return response()->json([
             'success' => true,
             'message' => 'Add todo successfully.',
-            'redirect' => route('useraddtodo'),
+            'redirect' => route('adminviewtodo'),
         ]);
     }
 
@@ -105,6 +105,12 @@ class TodoManager extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $todos = Todo::findOrFail($id);
+        $todos->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Todo deleted successfully',
+            'redirect' => route('viewuser'),
+        ]);
     }
 }

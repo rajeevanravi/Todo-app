@@ -35,17 +35,13 @@ body {
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
         <div class="form-floating">
             <input name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
-            @error('email')
-                <span class="text-danger">{{$message}}</span>
-            @enderror
+            <label for="floatingInput" id ="emaillabel">Email address</label>
+
         </div>
         <div class="form-floating">
             <input name="password" type="password" class="form-control" id="password" placeholder="Password">
-            <label for="floatingPassword">Password</label>
-            @error('password')
-                <span class="text-danger">{{$message}}</span>
-            @enderror
+            <label id="passwordlabel" for="floatingPassword">Password</label>
+
         </div>
         <div class="form-check text-start my-3">
             <input class="form-check-input" type="checkbox" value="remember-me" id="checkDefault">
@@ -60,11 +56,14 @@ body {
 @section('scripts')
     <script>
         $(document).ready(function () {
+            $('#email, #password').click(function() {
+                $("#" + this.id + "label").animate({ left: "300px" }, 1000);
+            });
 
             $('#login_form').validate({
 
                 rules:{
-                    name:{
+                    email:{
                         required: true,
                         minlength: 3
                     },
@@ -74,8 +73,8 @@ body {
                     },
                 },
                 message:{
-                    name:{
-                        required: "Please enter your name",
+                    email:{
+                        required: "Please enter your email",
                         minlength: "Name must be at least 3 characters",
                     },
                     password:{
@@ -97,17 +96,15 @@ body {
                         dataType: 'json',
                         success: function (response) {
                             if (response.success) {
-                       // alert(response.message);
                                 Swal.fire({
                                     position: "top-end",
                                     icon: "success",
                                     title: response.message,
                                     showConfirmButton: false,
-                                    timer: 1500
+                                    timer: 1500,
                                 });
                             window.location.href = response.redirect;
                             } else {
-                            //alert('Try again');
                             Swal.fire({
                                 icon: "error",
                                 title: "Oops...",
@@ -117,7 +114,6 @@ body {
                 },
 
                         error: function () {
-                            //alert('Something went wrong.');
                             Swal.fire({
                                 title: "The Internet?",
                                 text: "Something went wrong.",

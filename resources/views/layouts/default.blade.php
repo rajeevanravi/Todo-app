@@ -13,8 +13,10 @@
   </head>
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @yield("content")
-    @yield("scripts")
 
+    @yield("content")
+
+    @yield("scripts")
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

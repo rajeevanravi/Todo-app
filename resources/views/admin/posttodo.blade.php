@@ -28,7 +28,6 @@
         $(document).ready(function () {
             $('#submit').click(function (e) {
                 e.preventDefault();
-                alert('nn')
                 let addtodo_formData = {
                     title: $('#title').val(),
                     message: $('#message').val(),

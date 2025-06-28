@@ -36,31 +36,31 @@ body {
         <h1 class="h3 mb-3 fw-normal">Sign up an user</h1>
         <div class="form-floating">
             <input name="name" type="text" class="form-control" id="name" placeholder="ender the name">
-            <label for="floatingInput">Name</label>
-            @error('name')
+            <label id="namelabel" for="floatingInput">Name</label>
+            {{-- @error('name')
                 <span class="text-danger">{{$message}}</span>
-            @enderror
+            @enderror --}}
         </div>
         <div class="form-floating">
             <input name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
-             @error('email')
+            <label id="emaillabel" for="floatingInput">Email address</label>
+             {{-- @error('email')
                 <span class="text-danger">{{$message}}</span>
-            @enderror
+            @enderror --}}
         </div>
         <div class="form-floating">
             <input name="role" type="text" class="form-control" id="role" placeholder="name@example.com">
-            <label for="floatingInput">Role</label>
-            @error('role')
+            <label id="rolelabel" for="floatingInput">Role</label>
+            {{-- @error('role')
                 <span class="text-danger">{{$message}}</span>
-            @enderror
+            @enderror --}}
         </div>
         <div class="form-floating">
             <input name="password" type="password" class="form-control" id="password" placeholder="Password">
-            <label for="floatingPassword">Password</label>
-            @error('password')
+            <label id="passwordlabel" for="floatingPassword">Password</label>
+            {{-- @error('password')
                 <span class="text-danger">{{$message}}</span>
-            @enderror
+            @enderror --}}
         </div>
 
         <div style="display: flex; gap: 10px; align-items: center;">
@@ -78,6 +78,11 @@ body {
             $.validator.addMethod("validRole", function (value, element) {
                return value === "admin" || value === "user"; // Only allow "admin" or "user"
             }, "Role must be either admin or user");
+
+            $('#email', '#password', "#role", '#name' ).click(function() {
+                $("#" + this.id + "label").animate({ left: "300px" }, 1000);
+            });
+
 
             $('#register_form').validate({
                 rules:{
@@ -132,7 +137,6 @@ body {
                     data: register_formData,
                     success: function (response) {
                         if (response.success) {
-                        //alert(response.message);
                         Swal.fire({
                             title: "Drag me!",
                             icon: response.message,
@@ -140,7 +144,6 @@ body {
                         });
                         window.location.href = response.redirect;
                         } else {
-                        //alert(response.message);
                         Swal.fire({
                           icon: "error",
                           title: "Oops...",
@@ -150,7 +153,6 @@ body {
                     },
 
                     error: function () {
-                        //alert('Something went wrong.');
                         Swal.fire({
                             title: "The Internet?",
                             text: "Something went wrong.",
