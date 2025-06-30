@@ -97,7 +97,19 @@ class TodoManager extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'message' => 'required|string',
+        ]);
+
+        $todo = Todo::findOrFail($id);
+        $todo->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Edit todo successfully',
+            'redirect' => route('viewuser'),
+        ]);
     }
 
     /**

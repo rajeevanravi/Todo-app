@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManager;
 use App\Http\Controllers\TodoManager;
 use App\Http\Controllers\UserManager;
-use App\Models\Todo;
+use App\Http\Controllers\DataencryptManager;
+
 
 
 
@@ -29,6 +30,10 @@ Route::post('login', [AuthManager::class, "loginpost"])->name(name:"login.post")
 
 Route::get('logout', [AuthManager::class, 'logout'])->name('logout');
 
+Route::get('/secure-info', [DataencryptManager::class, 'show'])
+    ->middleware('decrypt.url')
+    ->name('secure.info');
+
 Route::middleware('auth')->group(function () {
 
     Route::get('register', [AuthManager::class, "register"])->name(name:"register");
@@ -51,6 +56,8 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/users/{id}', [UserManager::class, 'update'])->name('users.update');
 
+    Route::put('/edittodos/{id}', [TodoManager::class, 'update'])->name('todos.update');
+
     Route::get('admindash', function () {
          return view('admin.admindash');
     })->name(name:"admin");
@@ -59,17 +66,17 @@ Route::middleware('auth')->group(function () {
          return view('user.userdash');
     })->name(name:"user");
 
-    Route::get('edituser', function () {
+    /* Route::get('edituser', function () {
          return view('admin.edituser');
-    })->name(name:"edituser");
+    })->name(name:"edituser"); */
 
-    Route::get('adminaddtodo', function () {
+    /* Route::get('adminaddtodo', function () {
         return view('admin.posttodo');
-    })->name(name:"adminaddtodo");;
+    })->name(name:"adminaddtodo");; */
 
-    Route::get('useraddtodo', function () {
+    /* Route::get('useraddtodo', function () {
         return view('user.posttodo');
-    })->name(name:"useraddtodo");;
+    })->name(name:"useraddtodo");; */
 
 
 });
