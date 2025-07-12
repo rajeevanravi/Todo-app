@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -14,8 +15,9 @@ class UserManager extends Controller
      */
     public function index()
     {
-        $user = User::all();
-        return view('admin.viewuser', compact("user"));
+        $users = User::all();
+        /* dd($user); */
+        return view('admin.adminlayout', compact("users"));
     }
 
     /**
@@ -49,7 +51,6 @@ class UserManager extends Controller
     {
         $user = User::findOrFail($id);
         return view('admin.edituser', compact("user"));
-
     }
 
     /**
@@ -59,11 +60,11 @@ class UserManager extends Controller
     {
         $user = User::findOrFail($id);
 
-    $validated = $request->validate([
-        'name' => 'required',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'password' => 'nullable|min:6',
-        'role' => 'required',
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6',
+            'role' => 'required',
         ]);
 
         if (!empty($validated['password'])) {
@@ -73,14 +74,13 @@ class UserManager extends Controller
         }
 
         $user->update($validated);
-      //  return redirect(route(name:"viewuser"));
+        //  return redirect(route(name:"viewuser"));
         return response()->json([
             'success' => true,
             'message' => 'Edit user successfully',
             'redirect' => route('viewuser'),
         ]);
-
-}
+    }
 
     /**
      * Remove the specified resource from storage.

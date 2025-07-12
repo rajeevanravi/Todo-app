@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\User;
 use App\Models\Todo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -10,26 +12,22 @@ class TodoManager extends Controller
 
     public function index()
     {
-        if (!Auth::check())
-        {
-        return redirect()->route('login');
-
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
         $role = Auth::user()->role;
 
-         if ($role === 'admin')
-         {
+        if ($role === 'admin') {
 
-             $todos = Todo::all();
-             return view('admin.viewtodo', compact('todos'));
-         }
-         else
-         {
-             $user = Auth::user();
-             $todos = $user->todos;
-             return view('user.viewtodo', compact('todos'));
-         }
-
+            $todos = Todo::all();
+            $users = User::all();
+            $todos = Todo::with('user')->get();
+            return view('admin.adminlayout', compact('todos', 'users'));
+        } else {
+            $user = Auth::user();
+            $todos = $user->todos;
+            return view('user.userlayout', compact('todos'));
+        }
     }
 
     /**
@@ -45,35 +43,44 @@ class TodoManager extends Controller
      */
     public function store(Request $request)
     {
+        // dd('test');
         $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'message' => 'required|string',
-    ]);
-        Todo::create([
-        'title' => $validated['title'],
-        'message' => $validated['message'],
-        'user_id' => Auth::id(),
-    ]);
-    $role = Auth::user()->role;
-    if ($role === 'admin')
-    {
-//return redirect(route(name:"adminaddtodo"));
-        return response()->json([
-            'success' => true,
-            'message' => 'Add todo successfully.',
-            'redirect' => route('adminviewtodo'),
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
         ]);
-    }
-    else
-    {
-      //  return redirect(route(name:"useraddtodo"));
-      return response()->json([
-            'success' => true,
-            'message' => 'Add todo successfully.',
-            'redirect' => route('adminviewtodo'),
+        $todo = Todo::create([
+            'title' => $validated['title'],
+            'message' => $validated['message'],
+            'user_id' => Auth::id(),
         ]);
-    }
-
+        $role = Auth::user()->role;
+        if ($role === 'admin') {
+            return response()->json([
+                'success' => true,
+                'message' => 'Add todo successfully.',
+                'data' => [
+                    'id' => $todo->id,
+                    'title' => $todo->title,
+                    'message' => $todo->message,
+                    'created_at' => $todo->created_at->format('Y-m-d H:i:s'),
+                    'user_name' => Auth::user()->name,
+                    'user_role' => Auth::user()->role,
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => 'Add todo successfully.',
+                'data' => [
+                    'id' => $todo->id,
+                    'title' => $todo->title,
+                    'message' => $todo->message,
+                    'created_at' => $todo->created_at->format('Y-m-d H:i:s'),
+                    'user_name' => Auth::user()->name,
+                    'user_role' => Auth::user()->role,
+                ]
+            ]);
+        }
     }
 
     /**
@@ -98,8 +105,8 @@ class TodoManager extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'message' => 'required|string',
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
         ]);
 
         $todo = Todo::findOrFail($id);
@@ -109,6 +116,15 @@ class TodoManager extends Controller
             'success' => true,
             'message' => 'Edit todo successfully',
             'redirect' => route('viewuser'),
+            'data' => [
+                'id' => $todo->id,
+                'title' => $todo->title,
+                'message' => $todo->message,
+                'created_at' => $todo->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $todo->updated_at->format('Y-m-d H:i:s'),
+                'user_name' => Auth::user()->name,
+                'user_role' => Auth::user()->role,
+            ]
         ]);
     }
 

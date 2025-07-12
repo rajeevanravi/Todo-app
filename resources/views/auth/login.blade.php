@@ -104,7 +104,7 @@
                                     icon: 'success',
                                     title: response.message || "Done!",
                                     showConfirmButton: false,
-                                    timer: 3000,
+                                    timer: 500,
                                     timerProgressBar: true
                                 });
                                 setTimeout(function() {

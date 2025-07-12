@@ -4,49 +4,28 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManager;
 use App\Http\Controllers\TodoManager;
 use App\Http\Controllers\UserManager;
-use App\Http\Controllers\DataencryptManager;
-
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
-   return view('auth.login');
-})->name(name:"home");
+    return view('auth.login');
+})->name(name: "home");
 
-Route::get('login', [AuthManager::class, "login"])->name(name:"login");
+Route::get('login', [AuthManager::class, "login"])->name(name: "login");
 
-Route::post('login', [AuthManager::class, "loginpost"])->name(name:"login.post");
+Route::post('login', [AuthManager::class, "loginpost"])->name(name: "login.post");
 
 Route::get('logout', [AuthManager::class, 'logout'])->name('logout');
 
-Route::get('/secure-info', [DataencryptManager::class, 'show'])
-    ->middleware('decrypt.url')
-    ->name('secure.info');
-
 Route::middleware('auth')->group(function () {
 
-    Route::get('register', [AuthManager::class, "register"])->name(name:"register");
+    Route::get('register', [AuthManager::class, "register"])->name(name: "register");
 
-    Route::post('register', [AuthManager::class, "registerpost"])->name(name:"register.post");
+    Route::post('register', [AuthManager::class, "registerpost"])->name(name: "register.post");
 
     Route::post('/todos', [TodoManager::class, 'store'])->name('todo.store');
 
-    Route::get('/viewtodo-admin', [TodoManager::class, 'index'])->name(name:"adminviewtodo");
+    Route::get('/viewtodo-user', [TodoManager::class, 'index'])->name(name: "userviewtodo");
 
-    Route::get('/viewtodo-user', [TodoManager::class, 'index'])->name(name:"userviewtodo");
-
-    Route::get('viewuser', [UserManager::class, 'index'])->name(name:"viewuser");
+    Route::get('viewuser', [UserManager::class, 'index'])->name(name: "viewuser");
 
     Route::delete('/users/{id}', [UserManager::class, 'destroy'])->name('users.destroy');
 
@@ -58,25 +37,7 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/edittodos/{id}', [TodoManager::class, 'update'])->name('todos.update');
 
-    Route::get('admindash', function () {
-         return view('admin.admindash');
-    })->name(name:"admin");
+    Route::get('admindash', [TodoManager::class, 'index'])->name('admin');
 
-    Route::get('userdash', function () {
-         return view('user.userdash');
-    })->name(name:"user");
-
-    /* Route::get('edituser', function () {
-         return view('admin.edituser');
-    })->name(name:"edituser"); */
-
-    /* Route::get('adminaddtodo', function () {
-        return view('admin.posttodo');
-    })->name(name:"adminaddtodo");; */
-
-    /* Route::get('useraddtodo', function () {
-        return view('user.posttodo');
-    })->name(name:"useraddtodo");; */
-
-
+    Route::get('userdash', [TodoManager::class, 'index'])->name('user');
 });
