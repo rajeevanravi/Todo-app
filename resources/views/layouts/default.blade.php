@@ -18,6 +18,9 @@
             font-weight: bold;
         }
     </style>
+    <script src="https://cdn.tiny.cloud/1/489a9jhaidc88nxdnu0p0t30k04iikxpvw7rizv65c2tv1hi/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 </head>
 
 <body class="d-flex align-items-center py-4 bg-body-tertiary">

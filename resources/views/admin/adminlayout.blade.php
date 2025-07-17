@@ -94,8 +94,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="messagelabel" class="form-label">Message</label>
-                                <textarea name="message" id="editmessage" class="form-control" rows="4" placeholder="Write your task details..."
-                                    required></textarea>
+                                <textarea name="message" id="editmessage" class="form-control editm" rows="4"
+                                    placeholder="Write your task details..." required></textarea>
                             </div>
                     </div>
                     <div class="modal-footer">
@@ -238,7 +238,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
-                            <textarea name="message" id="message" class="form-control fm" rows="4"
+                            <textarea name="message" id="messagety" class="form-control fm" rows="4"
                                 placeholder="Write your task details..." required></textarea>
                         </div>
                     </div>
@@ -442,7 +442,10 @@
                 submitHandler: function(form) {
                     let todoFormData = new FormData();
                     todoFormData.append('title', $('.ft').val());
-                    todoFormData.append('message', $('.fm').val());
+                    /* todoFormData.append('message', $('.fm').val()); */
+                    todoFormData.append('message', tinymce.get('messagety').getContent({
+                        format: 'text'
+                    }));
                     todoFormData.append('_token', $('meta[name="csrf-token"]').attr(
                         'content')); // good to include CSRF
                     $.ajax({
@@ -566,13 +569,17 @@
             });
         }
         $(document).ready(function() {
+            // Use event delegation for all todo action buttons
             $(document).on('click', '.edittodo', function(e) {
                 e.preventDefault();
                 let edittodoId = $(this).data("id");
                 let edittitle = $(this).data("title");
                 let editmessage = $(this).data("message");
                 $('#edittitle').val(edittitle);
-                $('#editmessage').val(editmessage);
+                /* $('#editmessage').val(editmessage); */
+                if (tinymce.get('editmessage')) {
+                    tinymce.get('editmessage').setContent(editmessage || '');
+                }
                 let url = `/edittodos/${edittodoId}`;
                 $("#edittodo-form").validate({
                     rules: {
@@ -598,9 +605,12 @@
                     submitHandler: function(form) {
                         let edittodo_formData = {
                             title: $('#edittitle').val(),
-                            message: $('#editmessage').val(),
+                            message: tinymce.get('editmessage').getContent({
+                                format: 'text'
+                            })
                             /* _token: $('input[name="_token"]').val(), */
                         };
+
                         $.ajax({
                             url: url,
                             type: "PUT",
@@ -642,7 +652,7 @@
                     }
                 })
             });
-            $(".viewtodo").click(function(e) {
+            $(document).on('click', '.viewtodo', function(e) {
                 e.preventDefault();
                 let title = $(this).data('title');
                 let message = $(this).data('message');
@@ -824,7 +834,7 @@
         });
     </script>
     <script>
-        $('.delete-btn').click(function(e) {
+        $(document).on('click', '.delete-btn', function(e) {
             e.preventDefault();
             let userId = $(this).data("id");
             let url = `/users/${userId}`;
@@ -862,6 +872,119 @@
                                 text: "Something went wrong!",
                             });
                         }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#messagety', // Make sure your textarea has id="messagety"
+                height: 200,
+                plugins: [
+                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link',
+                    'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+                    'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed',
+                    'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable',
+                    'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments',
+                    'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography',
+                    'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
+                ],
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                mergetags_list: [{
+                        value: 'First.Name',
+                        title: 'First Name'
+                    },
+                    {
+                        value: 'Email',
+                        title: 'Email'
+                    },
+                ],
+                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject(
+                    'See docs to implement AI Assistant')),
+                setup: function(editor) {
+                    editor.on('change', function() {
+                        tinymce.triggerSave(); // Sync content to textarea
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#messagety', // Make sure your textarea has id="messagety"
+                height: 200,
+                plugins: [
+                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link',
+                    'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+                    'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed',
+                    'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable',
+                    'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments',
+                    'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography',
+                    'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
+                ],
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                mergetags_list: [{
+                        value: 'First.Name',
+                        title: 'First Name'
+                    },
+                    {
+                        value: 'Email',
+                        title: 'Email'
+                    },
+                ],
+                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject(
+                    'See docs to implement AI Assistant')),
+                setup: function(editor) {
+                    editor.on('change', function() {
+                        tinymce.triggerSave(); // Sync content to textarea
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#editmessage', // Make sure your textarea has id="messagety"
+                height: 200,
+                plugins: [
+                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link',
+                    'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+                    'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed',
+                    'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable',
+                    'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments',
+                    'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography',
+                    'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
+                ],
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                mergetags_list: [{
+                        value: 'First.Name',
+                        title: 'First Name'
+                    },
+                    {
+                        value: 'Email',
+                        title: 'Email'
+                    },
+                ],
+                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject(
+                    'See docs to implement AI Assistant')),
+                setup: function(editor) {
+                    editor.on('change', function() {
+                        tinymce.triggerSave(); // Sync content to textarea
+                    });
+                    editor.on('init', function(e) {
+
+
+                        editor.setContent("");
                     });
                 }
             });

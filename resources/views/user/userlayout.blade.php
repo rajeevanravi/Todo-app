@@ -116,6 +116,14 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
+            ClassicEditor.create(document.querySelector('#message'))
+                .then(editor => {
+                    addEditor = editor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
             $("#todo-form").validate({
                 rules: {
                     title: {
@@ -138,9 +146,11 @@
                     },
                 },
                 submitHandler: function(form) {
+                    let htmlContent = addEditor ? addEditor.getData() : $('#message').val();
+                    let plainText = $('<div>').html(htmlContent).text();
                     let addtodo_formData = {
                         title: $('#title').val(),
-                        message: $('#message').val(),
+                        message: plainText,
                         /* _token: $('input[name="_token"]').val(), */
                     };
                     $.ajax({
@@ -247,17 +257,24 @@
     </script>
 
     <script>
-        /* $.ajaxSetup({
-                                                                headers: {
-                                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                                }
-                                                            }); */
         $(document).ready(function() {
-            $('.edittodo').click(function(e) {
+            ClassicEditor.create(document.querySelector('#editmessage'))
+                .then(editor => {
+                    editEditor = editor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            $(document).on('click', '.edittodo', function(e) {
                 e.preventDefault();
                 let edittodoId = $(this).data("id");
                 let edittitle = $(this).data("title");
                 let editmessage = $(this).data("message");
+                if (typeof editEditor !== 'undefined' && editEditor) {
+                    editEditor.setData(editmessage || '');
+                } else {
+                    $('#editmessage').val(editmessage);
+                }
                 let url = `/edittodos/${edittodoId}`;
                 $('#edittitle').val(edittitle);
                 $('#editmessage').val(editmessage);
@@ -283,9 +300,12 @@
                         },
                     },
                     submitHandler: function(form) {
+                        let htmlContent = $('#editmessage').val();
+                        let plainText = $('<div>').html(htmlContent).text();
+
                         let edittodo_formData = {
                             title: $('#edittitle').val(),
-                            message: $('#editmessage').val(),
+                            message: plainText,
                             /*  _token: $('input[name="_token"]').val(), */
                         };
                         $.ajax({
@@ -306,12 +326,20 @@
                                     showConfirmButton: false,
                                     timer: 500
                                 }).then(() => {
+                                    let htmlContent = $('#editmessage')
+                                        .val();
+                                    let plainText = $('<div>').html(
+                                        htmlContent).text();
+                                    $(`#todo-${edittodoId} p`).text(
+                                        plainText);
                                     //location.reload();
                                     $('#edittodo').modal('hide');
                                     $(`#todo-${edittodoId} h5`).text($(
                                         '#edittitle').val());
-                                    $(`#todo-${edittodoId} p`).text(
-                                        $('#editmessage').val());
+                                    /* $(`#todo-${edittodoId} p`).text(
+                                        plainText); */
+                                    $(`#todo-${edittodoId} .edittodo`).data(
+                                        'message', plainText);
                                 });
                             },
                             error: function(xhr, status, error) {
@@ -325,7 +353,7 @@
                     }
                 })
             });
-            $(".deletetodo").click(function(e) {
+            $(document).on('click', '.deletetodo', function(e) {
                 e.preventDefault();
                 let todoId = $(this).data("id");
                 let url = `/todos/${todoId}`;
